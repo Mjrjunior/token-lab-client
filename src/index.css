@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rbc-calendar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 1663px;
+  justify-content: end;
+  item-align: end;
+}
