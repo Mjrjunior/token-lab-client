@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Api from '../../services/api.service';
-// import { useAuth } from '../../services/authentication.service';
 
 
 interface Event {
@@ -8,12 +7,19 @@ interface Event {
     description: string
     startTime: string
     endTime: string
-    createdByUserId: string
+    createdByUserId: string | null
 }
 
 const EventRegisterPage: React.FC = () => {
-//   const {user} = useAuth();
-  const [event, setEvent] = useState<Event>({ title: '', description: '', startTime: '', endTime: '', createdByUserId: '' });
+const userId = localStorage.getItem('userId');
+
+  const [event, setEvent] = useState<Event>({ 
+    title: '', 
+    description: '', 
+    startTime: '',
+    endTime: '',
+    createdByUserId: userId });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
@@ -21,8 +27,14 @@ const EventRegisterPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    Api.post('/events', event);
+    Api.post('/events', event).then((response) => {
+      if (response.status === 201) {
+        alert('Evento cadastrado com sucesso!');
+        window.location.href = '/event';
+      }
+    })
   };
+
 
   return (
     <div className="bg-gray-200 min-h-screen p-5">
@@ -33,7 +45,7 @@ const EventRegisterPage: React.FC = () => {
         </label>
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Descrição:
-          <input type="text" name="title" value={event.title} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <input type="text" name="description" value={event.description} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
         </label>
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Início do Evento:
@@ -50,3 +62,4 @@ const EventRegisterPage: React.FC = () => {
 };
 
 export default EventRegisterPage;
+

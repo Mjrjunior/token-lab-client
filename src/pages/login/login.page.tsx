@@ -37,7 +37,10 @@ export const LoginPage: React.FC = () => {
     try {
       const response = await Api.post("/sessions", {email: data.email, password: data.password});
       const {access_token} = response.data;
+      const {id} = response.data.user;
+      console.log(id)
       await localStorage.setItem("authToken", access_token);
+      await localStorage.setItem("userId", id);
       window.location.reload();
     } catch (error) {
        console.error(error);
